@@ -1,0 +1,24 @@
+{
+  "model": "U-Net (ResNet34)",
+  "encoder": "resnet34",
+  "pretrained": "imagenet",
+  "num_classes": 8,
+  "patch_size": 512,
+  "batch_size": 8,
+  "num_epochs": 145,
+  "best_val_dice": 0.944546722844237,
+  "best_val_binary_dice": 0.8016871213912964,
+  "final_train_loss": 0.18933369478917633,
+  "final_val_loss": 0.35884655949970085,
+  "training_time_seconds": 35988.278844833374,
+  "total_parameters": 24437384,
+  "hyperparameters": {
+    "learning_rate": 0.0001,
+    "encoder_lr_multiplier": 0.1,
+    "encoder_unfreeze_epoch": 10,
+    "weight_decay": 0.0001,
+    "scheduler": "CosineAnnealingWarmRestarts",
+    "loss": "CompoundLoss (0.5 Dice + 0.5 Focal)",
+    "patience": 30
+  }
+}

@@ -1,0 +1,21 @@
+# Packages used to train on this machine. Torch and torchvision come from
+# the cu130 index and are listed in requirements-torch-cu130.txt.
+segmentation-models-pytorch==0.6.0
+transformers==5.18.0
+albumentations==2.0.8
+opencv-python-headless==5.0.0.93
+numpy==2.5.3
+pillow
+matplotlib==3.11.2
+seaborn==0.13.2
+scikit-learn==1.9.1
+scipy==1.18.1
+pandas==3.0.6
+timm==1.0.30
+joblib==1.6.0
+safetensors==0.8.0
+tqdm==4.70.0
+regex==2026.9.29
+shap==0.54.1
+xgboost==3.4.1
+optuna==5.0.0

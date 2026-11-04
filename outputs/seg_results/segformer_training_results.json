@@ -1,0 +1,21 @@
+{
+  "model": "SegFormer-B2",
+  "pretrained": "nvidia/segformer-b2-finetuned-ade-512-512",
+  "num_classes": 8,
+  "patch_size": 512,
+  "batch_size": 2,
+  "num_epochs": 91,
+  "best_val_dice": 0.954329853183325,
+  "best_val_binary_dice": 0.8218656182289124,
+  "training_time_seconds": 37337.41671872139,
+  "total_parameters": 27352776,
+  "trainable_parameters": 27352776,
+  "hyperparameters": {
+    "learning_rate": 6e-05,
+    "warmup_epochs": 5,
+    "weight_decay": 0.0001,
+    "scheduler": "PolynomialLR (power=0.9) with linear warmup",
+    "loss": "CompoundLoss (0.5 Dice + 0.5 Focal)",
+    "patience": 30
+  }
+}

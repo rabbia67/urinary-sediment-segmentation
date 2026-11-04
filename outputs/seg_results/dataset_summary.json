@@ -1,0 +1,45 @@
+{
+  "total_images": 5376,
+  "splits": {
+    "train": 4256,
+    "val": 852,
+    "test": 268
+  },
+  "image_size": {
+    "height": 600,
+    "width": 800
+  },
+  "mask_source": "VOC bounding boxes rasterized with smaller boxes on top",
+  "patch_size": 512,
+  "num_classes": 8,
+  "class_names": {
+    "0": "Background",
+    "1": "Cast",
+    "2": "Crystal",
+    "3": "Epithelial cell",
+    "4": "Epithelial nucleus",
+    "5": "Erythrocyte",
+    "6": "Leukocyte",
+    "7": "Mycete"
+  },
+  "patches_per_split": {
+    "train": 6706,
+    "val": 672,
+    "test": 210
+  },
+  "severity_thresholds": {
+    "p33": 0.46633888627819553,
+    "p66": 0.5188304863721804,
+    "rank_scope": "train_only"
+  },
+  "class_weights": [
+    1.0,
+    0.5069711208343506,
+    1.1137080192565918,
+    0.5655981302261353,
+    2.566153049468994,
+    0.5641442537307739,
+    0.7150475978851318,
+    0.9683778882026672
+  ]
+}

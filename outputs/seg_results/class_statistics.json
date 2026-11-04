@@ -1,0 +1,66 @@
+{
+  "Background": {
+    "class_id": 0,
+    "total_pixels": 2494628424,
+    "mean_pixels_per_image": 464030.5848214286,
+    "n_images_present": 5376,
+    "total_objects": 6128,
+    "mean_objects_per_image": 1.1398809523809523
+  },
+  "Cast": {
+    "class_id": 1,
+    "total_pixels": 23716177,
+    "mean_pixels_per_image": 4411.491257440476,
+    "n_images_present": 1436,
+    "total_objects": 3407,
+    "mean_objects_per_image": 0.6337425595238095
+  },
+  "Crystal": {
+    "class_id": 2,
+    "total_pixels": 5018528,
+    "mean_pixels_per_image": 933.5059523809524,
+    "n_images_present": 852,
+    "total_objects": 1578,
+    "mean_objects_per_image": 0.2935267857142857
+  },
+  "Epithelial cell": {
+    "class_id": 3,
+    "total_pixels": 19651056,
+    "mean_pixels_per_image": 3655.3303571428573,
+    "n_images_present": 1429,
+    "total_objects": 5404,
+    "mean_objects_per_image": 1.0052083333333333
+  },
+  "Epithelial nucleus": {
+    "class_id": 4,
+    "total_pixels": 875147,
+    "mean_pixels_per_image": 162.78776041666666,
+    "n_images_present": 456,
+    "total_objects": 674,
+    "mean_objects_per_image": 0.1253720238095238
+  },
+  "Erythrocyte": {
+    "class_id": 5,
+    "total_pixels": 18573552,
+    "mean_pixels_per_image": 3454.901785714286,
+    "n_images_present": 1032,
+    "total_objects": 13725,
+    "mean_objects_per_image": 2.553013392857143
+  },
+  "Leukocyte": {
+    "class_id": 6,
+    "total_pixels": 11567207,
+    "mean_pixels_per_image": 2151.638206845238,
+    "n_images_present": 1338,
+    "total_objects": 5436,
+    "mean_objects_per_image": 1.0111607142857142
+  },
+  "Mycete": {
+    "class_id": 7,
+    "total_pixels": 6211829,
+    "mean_pixels_per_image": 1155.474144345238,
+    "n_images_present": 676,
+    "total_objects": 2034,
+    "mean_objects_per_image": 0.3783482142857143
+  }
+}
