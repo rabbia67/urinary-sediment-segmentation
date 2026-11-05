@@ -16,6 +16,7 @@ Date: 2024
 import os
 import sys
 import json
+import argparse
 import warnings
 from pathlib import Path
 
@@ -207,7 +208,7 @@ def plot_qualitative_comparison(images, masks, unet_preds, sf_preds,
         axes[row, 0].set_title(f'Image ({filenames[idx]})', fontsize=9)
 
         axes[row, 1].imshow(cmap_colors[masks[idx]])
-        axes[row, 1].set_title('Ground Truth', fontsize=9)
+        axes[row, 1].set_title('Painted mask', fontsize=9)
 
         axes[row, 2].imshow(cmap_colors[unet_preds[idx]])
         axes[row, 2].set_title('U-Net Prediction', fontsize=9)
@@ -255,7 +256,40 @@ def plot_confusion_matrices(unet_preds, sf_preds, gt_masks, save_path: Path):
     print(f"Saved: {save_path}")
 
 
+def pooled_class_dice(predictions, masks, num_classes: int = NUM_CLASSES) -> dict:
+    """Dice from pixels pooled across images. An absent class is not scored as 1."""
+    out = {}
+    for cls_id in range(num_classes):
+        intersection = 0
+        pred_sum = 0
+        gt_sum = 0
+        n_present = 0
+        for pred, gt in zip(predictions, masks):
+            pred_c = pred == cls_id
+            gt_c = gt == cls_id
+            intersection += int((pred_c & gt_c).sum())
+            pred_sum += int(pred_c.sum())
+            gt_sum += int(gt_c.sum())
+            if gt_c.any():
+                n_present += 1
+        denom = pred_sum + gt_sum
+        dice = (2.0 * intersection) / denom if denom else float("nan")
+        out[CLASS_NAMES[cls_id]] = {
+            "dice": dice,
+            "intersection": intersection,
+            "pred_pixels": pred_sum,
+            "gt_pixels": gt_sum,
+            "images_present": n_present,
+        }
+    return out
+
+
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--test-only", action="store_true",
+                        help="Score the 268 test images and skip train/val prediction")
+    args = parser.parse_args()
+
     print("=" * 60)
     print("SEGMENTATION MODEL EVALUATION")
     print("=" * 60)
@@ -289,6 +323,8 @@ def main():
     print("\n[Step 4] Statistical comparison...")
     wilcoxon_stat, wilcoxon_p = scipy_stats.wilcoxon(unet_dice_list, sf_dice_list)
     print(f"  Paired Wilcoxon test (Mean Dice): stat={wilcoxon_stat:.4f}, p={wilcoxon_p:.6f}")
+    wilcoxon_bin_stat, wilcoxon_bin_p = scipy_stats.wilcoxon(unet_bdice_list, sf_bdice_list)
+    print(f"  Paired Wilcoxon test (Binary Dice): stat={wilcoxon_bin_stat:.4f}, p={wilcoxon_bin_p:.6f}")
 
     diff = np.array(unet_dice_list) - np.array(sf_dice_list)
     bootstrap_diffs = []
@@ -306,18 +342,18 @@ def main():
     np.save(RESULTS_DIR / 'test_predictions_unet.npy', np.array(unet_preds, dtype=np.uint8))
     np.save(RESULTS_DIR / 'test_predictions_segformer.npy', np.array(sf_preds, dtype=np.uint8))
 
-    # Also predict on train and val for feature extraction
-    for split in ['train', 'val']:
-        print(f"\n  Predicting {split} set...")
-        split_imgs, split_masks, split_fnames = load_split(str(DATA_ROOT), split)
+    if not args.test_only:
+        for split in ['train', 'val']:
+            print(f"\n  Predicting {split} set...")
+            split_imgs, _, _ = load_split(str(DATA_ROOT), split)
 
-        for model_name, model_obj in [('unet', unet_model), ('segformer', sf_model)]:
-            preds = []
-            for img in split_imgs:
-                pred = predict_full_image(model_obj, img, transform)
-                preds.append(pred)
-            np.save(RESULTS_DIR / f'{split}_predictions_{model_name}.npy',
-                    np.array(preds, dtype=np.uint8))
+            for model_name, model_obj in [('unet', unet_model), ('segformer', sf_model)]:
+                preds = []
+                for img in split_imgs:
+                    pred = predict_full_image(model_obj, img, transform)
+                    preds.append(pred)
+                np.save(RESULTS_DIR / f'{split}_predictions_{model_name}.npy',
+                        np.array(preds, dtype=np.uint8))
 
     # Dice comparison bar chart
     plot_dice_comparison(unet_metrics, sf_metrics, FIGURES_DIR / 'fig06_dice_comparison.png')
@@ -368,9 +404,17 @@ def main():
         'comparison': {
             'wilcoxon_statistic': float(wilcoxon_stat),
             'wilcoxon_p_value': float(wilcoxon_p),
+            'wilcoxon_binary_statistic': float(wilcoxon_bin_stat),
+            'wilcoxon_binary_p_value': float(wilcoxon_bin_p),
             'dice_diff_mean': float(diff.mean()),
             'dice_diff_ci_95': [float(ci_lower), float(ci_upper)],
+            'note': 'Mean Dice gives 1 to a class absent from both the prediction and the image. pooled_dice sums pixels across the test images and does not.',
         },
+        'pooled_dice': {
+            'unet': pooled_class_dice(unet_preds, test_masks),
+            'segformer': pooled_class_dice(sf_preds, test_masks),
+        },
+        'n_test_images': len(test_images),
     }
 
     with open(RESULTS_DIR / 'segmentation_evaluation.json', 'w') as f:
