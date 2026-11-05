@@ -45,9 +45,9 @@ Both networks minimise `0.5 Dice + 0.5 focal`, with focal γ = 2. The class weig
 | Batch size | 8 | 2 |
 | Learning rate | 1×10⁻⁴ | 6×10⁻⁵ |
 | Schedule | Cosine annealing with warm restarts | 5-epoch linear warm-up, then polynomial decay (power 0.9) |
-| Other | Encoder frozen until epoch 10, then trained at 0.1× the learning rate. Weight decay 1×10⁻⁴. | Weight decay 1×10⁻⁴ |
+| Other | Encoder frozen through epoch 10, then unfrozen at epoch 11 and trained at 0.1× the learning rate. Weight decay 1×10⁻⁴. | Weight decay 1×10⁻⁴ |
 | Parameters | 24,437,384 | 27,352,776 |
-| Device | RTX 2080 SUPER | RTX 2080 SUPER for epochs 1–18; RTX 3090 from epoch 19 |
+| Device | RTX 3090 | RTX 3090 |
 | Selected checkpoint | Epoch 115 | Epoch 79 |
 
 Mean Dice averages the seven foreground classes and scores a class that is absent from both the prediction and the image as 1. Binary Dice collapses every non-background label to one foreground class and does not give that credit.
@@ -64,7 +64,7 @@ Tertiles use the 33.33 and 66.67 percentiles of `S` on the training images: 0.46
 
 ## Reproduce
 
-Packages other than PyTorch are listed in `requirements-urinary-sediment.txt`. The U-Net machine used the CUDA 13 build in `requirements-torch-cu130.txt`. The SegFormer continuation used PyTorch 2.14.0 with CUDA 12.6.
+Packages other than PyTorch are listed in `requirements-urinary-sediment.txt`. Training used PyTorch 2.14.0 with CUDA 12.6 on one RTX 3090.
 
 ```bash
 python seg/prepare_urinary_sediment.py
@@ -88,7 +88,7 @@ Validation patches, from the saved training logs:
 | U-Net (ResNet-34) | epoch 145 | 0.9445 at epoch 115 | 0.8017 |
 | SegFormer-B2 | epoch 109 | 0.9543 at epoch 79 | 0.8219 |
 
-Binary Dice stored with the selected checkpoints is 0.7923 for U-Net and 0.8189 for SegFormer-B2.
+The U-Net log records binary Dice 0.7923 at epoch 115. The SegFormer log does not record binary Dice at epoch 79. The training summary stores the highest SegFormer binary Dice, 0.8219.
 
 Full test images, one score per image. The ± term is the standard deviation across the 268 images.
 

@@ -1,6 +1,6 @@
 # SegFormer on the RTX 3090
 
-The 3090 continuation already finished. Training stopped at epoch 109. The best checkpoint is epoch 79, validation mean Dice 0.9543, binary Dice at that checkpoint 0.8189. The highest binary Dice on the run is 0.8219. U-Net had already finished at epoch 145, best mean Dice 0.9445 at epoch 115. Checkpoints are not stored in git.
+The 3090 continuation already finished. Training stopped at epoch 109. The best checkpoint is epoch 79, validation mean Dice 0.9543. The highest binary Dice on the run is 0.8219. The training log does not record binary Dice at epoch 79, and the checkpoint file is not in this tree. U-Net had already finished at epoch 145, best mean Dice 0.9445 at epoch 115. The U-Net log records binary Dice 0.7923 at that epoch. Checkpoints are not stored in git.
 
 The notes below are the command that was used to resume from the earlier epoch-18 checkpoint. They are not a request to train again.
 
