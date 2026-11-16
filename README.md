@@ -142,14 +142,3 @@ Numeric summaries: `outputs/seg_results/segmentation_evaluation.json`, `outputs/
 ## License
 
 MIT. See [LICENSE](LICENSE).
-
-## External evaluation on OpenUrine
-
-`seg/10_openurine_external.py` applies the two selected checkpoints and their probability fusion, without retraining, to the 790 labelled images of OpenUrine (Alizadeh et al., *Scientific Reports* 2025, doi:10.1038/s41598-025-25339-z; access by request at https://github.com/alikarimi120/OpenUrine). The 39 OpenUrine classes are mapped onto the seven classes above (`MAP39` in the script); boxes of the ten classes without a counterpart (bacteria, sperm, mucus, parasite eggs, artifacts, fat, atypical cells, *Trichomonas*) are marked ignore and excluded from every Dice. Each image is resized so that its longer side is 1,600 px (erythrocyte scale matched to the Liang masks) and, as a sensitivity check, 800 px.
-
-```bash
-python seg/10_openurine_external.py --openurine /path/to/OpenUrine            # expects OpenUrine/data.yaml and OpenUrine/Data/
-python seg/10_openurine_external.py --openurine /path/to/OpenUrine --dry-run  # plumbing test, random predictor
-```
-
-Writes `outputs/seg_results/openurine_external.json`, per-image CSVs and LaTeX table rows (`openurine_table_<L>.tex`). The infection-burden score is computed only when the Liang training masks are reachable at `data/urinary-sediment/`, because its rank maps are fit on those masks.
